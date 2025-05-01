@@ -1,13 +1,15 @@
 apply plugin: 'com.android.application'
+apply plugin: 'org.jetbrains.kotlin.android'
+apply plugin: 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 
 android {
     compileSdk 34
     defaultConfig {
         targetSdk 34
-        minSdk 18
+        minSdk 21
         vectorDrawables.useSupportLibrary true
 
-        applicationId "de.kai_morich.simple_bluetooth_terminal"
+        applicationId "com.clasli.hover_app"
         versionCode 1
         versionName "1.0"
     }
@@ -21,10 +23,20 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    namespace 'de.kai_morich.simple_bluetooth_terminal'
+    namespace 'com.clasli.hover_app'
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.11.0'
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+//    implementation 'androidx.core:core-ktx:1.16.0'
 }

@@ -45,7 +45,7 @@ class LocationService : Service(), SensorEventListener {
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(result: LocationResult) {
                 result.lastLocation?.let {
-                    Log.d("LocationService", "Lat: ${it.latitude}, Lng: ${it.longitude}")
+                    Log.d("LocationServiceLog", "Lat: ${it.latitude}, Lng: ${it.longitude}")
 
                     // lat: 0.000, lon: 0.000, destLat: 0.0000, destLon: 0.0000, az: 0.0
                     val str = "lat: %.6f, lon: %.6f, destLat: %.6f, destLon: %.6f, az: %.1f".format(

@@ -62,7 +62,7 @@ public class SerialService extends Service implements SerialListener {
         public void onReceive(Context context, Intent intent) {
             if ("com.clasli.SERIAL_SEND".equals(intent.getAction())) {
                 String msg = intent.getStringExtra("message");
-                Log.d("SerialService", "connected...? "+connected);
+                Log.d("SerialService", "connected...? "+connected+msg);
                 if (msg != null && connected && socket != null) {
                     try {
                         socket.write((msg + TextUtil.newline_crlf).getBytes());

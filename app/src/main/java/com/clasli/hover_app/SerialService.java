@@ -5,13 +5,16 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -54,6 +57,42 @@ public class SerialService extends Service implements SerialListener {
     private SerialListener listener;
     private boolean connected;
 
+    private final BroadcastReceiver locationReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if ("com.clasli.SERIAL_SEND".equals(intent.getAction())) {
+                String msg = intent.getStringExtra("message");
+                Log.d("SerialService", "connected...? "+connected);
+                if (msg != null && connected && socket != null) {
+                    try {
+                        socket.write((msg + TextUtil.newline_crlf).getBytes());
+                        Log.d("SerialService", "Sending..."+msg);
+                    } catch (IOException e) {
+                        Log.e("SerialService", "Serial write failed", e);
+                        e.printStackTrace();
+                        onSerialIoError(e);
+                    }
+                }
+            }
+        }
+    };
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        // Register broadcast receiver
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            IntentFilter filter = new IntentFilter("com.clasli.SERIAL_SEND");
+            registerReceiver(locationReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+        }
+//        else {
+//            IntentFilter filter = new IntentFilter("com.clasli.SERIAL_SEND");
+//            registerReceiver(locationReceiver, filter);
+//        }
+
+    }
+
     /**
      * Lifecylce
      */
@@ -67,6 +106,7 @@ public class SerialService extends Service implements SerialListener {
 
     @Override
     public void onDestroy() {
+        unregisterReceiver(locationReceiver);
         cancelNotification();
         disconnect();
         super.onDestroy();

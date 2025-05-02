@@ -143,9 +143,10 @@ public class DevicesFragment extends ListFragment {
 //        getParentFragmentManager().beginTransaction().replace(R.id.fragment, fragment, "terminal").addToBackStack(null).commit();
 
         Fragment fragment = new MapFragment();
+        fragment.setArguments(args);
         getParentFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment, fragment, "empty")
+                .replace(R.id.fragment, fragment, "map")
                 .addToBackStack(null)
                 .commit();
 
